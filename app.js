@@ -1,6 +1,5 @@
-// App logic for Simple English Practice.
-// Data is loaded from data/vocab-data.js and data/practice-data.js.
-
+const VOCAB_DATA = window.VOCAB_DATA || [];
+const PRACTICE_DATA = window.PRACTICE_DATA || [];
 const $ = id => document.getElementById(id);
     const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     function setRoute(route) {
