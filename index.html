@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ôn Tập Từ Vựng Cùng My</title>
+  <meta name="description" content="Ôn tập 3000 từ vựng tiếng Anh có phiên âm và 6.000 câu hỏi A/B/C cho người mất gốc." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Về trang chủ">
+        <div class="logo">My</div>
+        <div><h1>Cùng My</h1><p>Ôn tập tiếng Anh cho người mất gốc</p></div>
+      </a>
+      <nav class="nav" aria-label="Điều hướng chính">
+        <button data-route="home" class="active">Trang chủ</button>
+        <button data-route="vocab">Thẻ từ vựng</button>
+        <button data-route="practice">Tự kiểm tra</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="view active">
+        <div class="hero">
+          <div class="hero-card">
+            <div class="eyebrow">LẤY GỐC TIẾNG ANH CÙNG MY</div>
+            <h2 class="hero-title">Ôn Tập <span class="highlight">Từ Vựng</span></h2>
+            <p class="subtitle">Đây là nơi ôn tập dành cho những ai đã học tiếng Anh bao nhiêu năm mà vẫn cảm thấy lo lắng khi giao tiếp. Tất cả vấn đề đều xuất phát từ phản xạ! Vì vậy, bạn chỉ việc ôn luyện tại nhà bằng cách nhìn từ vựng, đọc theo phiên âm bên dưới, đoán nghĩa và lật thẻ để xem nghĩa tiếng Việt, rồi tự kiểm tra lại bằng vài câu hỏi trắc nghiệm A/B/C đơn giản. 3000 từ vựng rồi sẽ nằm gọn trong tay bạn thôi!</p>
+            <div class="chips">
+              <span class="chip">3000 từ vựng</span>
+              <span class="chip green">60 chủ đề</span>
+              <span class="chip yellow">Có phiên âm</span>
+              <span class="chip orange">6.000 câu hỏi</span>
+            </div>
+            <div class="option-grid">
+              <button class="option" data-route="vocab"><div class="num">1</div><h3>Thẻ Học Từ Vựng</h3><p>Học theo từng chủ đề. Mỗi từ tiếng Anh đều có phiên âm ngay bên dưới, nên bạn không phải đoán cách đọc.</p></button>
+              <button class="option" data-route="practice"><div class="num">2</div><h3>Tự Kiểm Tra, Không Lo Sai</h3><p>Thử trả lời các câu hỏi A/B/C và xem đáp án ngay bên dưới!</p></button>
+            </div>
+            <div class="home-actions">
+              <button class="btn" data-route="vocab">Bắt đầu học thẻ</button>
+              <button class="btn secondary" data-route="practice">Làm bài tự kiểm tra</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="vocab" class="view">
+        <h2 class="page-title">Thẻ Học Từ Vựng</h2>
+        <p class="page-subtitle">Chọn một chủ đề, tìm từ cần học, rồi bấm vào thẻ hoặc nhấn phím Space để lật thẻ. Mặt trước hiển thị từ tiếng Anh và phiên âm; mặt sau hiển thị nghĩa tiếng Việt.</p>
+        <div class="toolbar">
+          <div class="filters">
+            <select id="vocabSection" aria-label="Lọc từ vựng theo chủ đề"></select>
+            <input id="vocabSearch" type="search" placeholder="Tìm từ tiếng Anh, phiên âm hoặc nghĩa tiếng Việt..." aria-label="Tìm từ vựng" />
+          </div>
+          <span class="pill" id="vocabCount"></span>
+        </div>
+        <div class="study-wrap">
+          <div class="progress"><div class="bar" id="vocabBar"></div></div>
+          <button class="study-card" id="flashCard" aria-label="Bấm để lật thẻ"></button>
+          <div class="controls">
+            <button class="btn secondary" id="vocabPrev">Trước</button>
+            <button class="btn" id="vocabFlip">Xem nghĩa tiếng Việt</button>
+            <button class="btn secondary" id="vocabNext">Tiếp</button>
+            <button class="btn secondary" id="vocabShuffle">Trộn thẻ</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="practice" class="view">
+        <h2 class="page-title">6.000 Câu Tự Kiểm Tra</h2>
+        <p class="page-subtitle">Chọn bộ câu hỏi hoặc trộn ngẫu nhiên. Bấm A/B/C để tự kiểm tra, hoặc bấm xem đáp án sau khi đã suy nghĩ.</p>
+        <div class="toolbar">
+          <div class="filters">
+            <select id="practiceSet" aria-label="Lọc câu hỏi theo bộ"></select>
+            <input id="practiceSearch" type="search" placeholder="Tìm câu hỏi, đáp án hoặc từ khóa..." aria-label="Tìm câu hỏi luyện tập" />
+          </div>
+          <span class="pill" id="practiceCount"></span>
+        </div>
+        <div class="study-wrap">
+          <div class="progress"><div class="bar" id="practiceBar"></div></div>
+          <div class="study-card" id="practiceCard"></div>
+          <div class="controls">
+            <button class="btn secondary" id="practicePrev">Trước</button>
+            <button class="btn" id="practiceReveal">Xem đáp án</button>
+            <button class="btn secondary" id="practiceNext">Tiếp</button>
+            <button class="btn secondary" id="practiceShuffle">Trộn câu hỏi</button>
+            <button class="btn secondary" id="practiceReset">Theo thứ tự</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+    <script src="data/vocab-data.js"></script>
+  <script src="data/practice-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
