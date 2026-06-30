@@ -68,3 +68,12 @@
     .result strong{color:var(--green)}
     .empty{font-size:18px;color:var(--muted)}
     @media(max-width:900px){.topbar{align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.option-grid{grid-template-columns:1fr}.filters,.filters select,.filters input{width:100%}.toolbar{align-items:stretch}h2.hero-title{font-size:clamp(48px,14vw,76px)}}
+
+/* Speaker button for Flip Cards */
+.term-line{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:0}
+.speaker-btn{width:54px;height:54px;border:0;border-radius:18px;background:var(--purple-soft);color:var(--purple);display:inline-grid;place-items:center;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 10px 20px rgba(123,88,209,.14);transition:.18s ease;flex:0 0 auto}
+.speaker-btn:hover{transform:translateY(-2px);background:var(--purple);color:#fff;filter:none}
+.speaker-btn:focus{outline:3px solid rgba(123,88,209,.25);outline-offset:3px}
+.speaker-note{display:inline-flex;align-items:center;gap:8px;margin-top:12px;color:var(--muted);font-size:14px;font-weight:800}
+.speaker-note .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+@media(max-width:640px){.speaker-btn{width:48px;height:48px;border-radius:16px;font-size:22px}.term-line{gap:10px}}

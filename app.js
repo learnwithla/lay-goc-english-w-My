@@ -33,11 +33,66 @@ const $ = id => document.getElementById(id);
       if (!items.length) { $('flashCard').innerHTML = '<div class="empty">Không có thẻ nào khớp với bộ lọc này.</div>'; return; }
       const item = items[vocabState.index];
       if (!vocabState.revealed) {
-        $('flashCard').innerHTML = `<div><div class="week-tag">#${item.id} • ${item.section}. ${escapeHTML(item.topic)} • ${escapeHTML(item.pos)}</div><p class="term">${escapeHTML(item.term)}</p><p class="card-phonetic">${escapeHTML(item.phonetic)}</p><p class="hint">Bấm vào thẻ hoặc nhấn phím Space để xem nghĩa tiếng Việt.</p></div>`;
+        $('flashCard').innerHTML = `<div><div class="week-tag">#${item.id} • ${item.section}. ${escapeHTML(item.topic)} • ${escapeHTML(item.pos)}</div><p class="term term-line"><span>${escapeHTML(item.term)}</span><span class="speaker-btn" role="button" tabindex="0" aria-label="Nghe phát âm: ${escapeHTML(item.term)}" title="Nghe phát âm">🔊</span></p><p class="card-phonetic">${escapeHTML(item.phonetic)}</p><p class="speaker-note"><span class="dot"></span>Bấm loa để nghe phát âm tiếng Anh bằng giọng nữ nếu trình duyệt hỗ trợ</p><p class="hint">Bấm vào thẻ hoặc nhấn phím Space để xem nghĩa tiếng Việt.</p></div>`;
         $('vocabFlip').textContent = 'Xem nghĩa tiếng Việt';
       } else {
-        $('flashCard').innerHTML = `<div><div class="week-tag">#${item.id} • ${item.section}. ${escapeHTML(item.topic)}</div><p class="vi">${escapeHTML(item.vi)}</p><p class="small-info"><strong>${escapeHTML(item.term)}</strong><br>${escapeHTML(item.phonetic)} • ${escapeHTML(item.pos)}</p><p class="hint">Bấm lại để ẩn nghĩa tiếng Việt.</p></div>`;
+        $('flashCard').innerHTML = `<div><div class="week-tag">#${item.id} • ${item.section}. ${escapeHTML(item.topic)}</div><p class="vi">${escapeHTML(item.vi)}</p><p class="small-info"><strong>${escapeHTML(item.term)}</strong> <span class="speaker-btn" role="button" tabindex="0" aria-label="Nghe phát âm: ${escapeHTML(item.term)}" title="Nghe phát âm">🔊</span><br>${escapeHTML(item.phonetic)} • ${escapeHTML(item.pos)}</p><p class="hint">Bấm lại để ẩn nghĩa tiếng Việt.</p></div>`;
         $('vocabFlip').textContent = 'Ẩn nghĩa tiếng Việt';
+      }
+    }
+    let preferredEnglishVoice = null;
+    function refreshPreferredEnglishVoice() {
+      if(!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      if(!voices || !voices.length) return null;
+      const englishVoices = voices.filter(v => /^en[-_]/i.test(v.lang || ''));
+      const voicePool = englishVoices.length ? englishVoices : voices;
+      const femaleVoiceNames = [
+        'Samantha','Ava','Allison','Susan','Victoria','Karen','Moira','Tessa','Fiona','Serena',
+        'Microsoft Aria','Microsoft Jenny','Microsoft Zira','Google US English','Google UK English Female',
+        'Female','Woman','Natural'
+      ];
+      preferredEnglishVoice = voicePool.find(v => femaleVoiceNames.some(name => (v.name || '').toLowerCase().includes(name.toLowerCase())))
+        || voicePool.find(v => /^en-US/i.test(v.lang || ''))
+        || voicePool[0]
+        || null;
+      return preferredEnglishVoice;
+    }
+    if('speechSynthesis' in window) {
+      refreshPreferredEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = refreshPreferredEnglishVoice;
+    }
+    function speakCurrentVocab(event) {
+      if(event) { event.preventDefault(); event.stopPropagation(); }
+      if(!vocabState.items.length) return;
+      const item = vocabState.items[vocabState.index];
+      const text = String(item.term || '').trim();
+      if(!text) return;
+      if(!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        alert('Trình duyệt này chưa hỗ trợ phát âm tự động. Chị thử mở bằng Chrome, Edge hoặc Safari nhé.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = refreshPreferredEnglishVoice();
+      if(voice) {
+        utterance.voice = voice;
+        utterance.lang = voice.lang || 'en-US';
+      } else {
+        utterance.lang = 'en-US';
+      }
+      utterance.rate = 0.9;
+      utterance.pitch = 1.15;
+      utterance.volume = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+    function handleFlashCardClick(event) {
+      if(event.target.closest('.speaker-btn')) { speakCurrentVocab(event); return; }
+      vocabToggle();
+    }
+    function handleFlashCardKeydown(event) {
+      if(event.target.closest('.speaker-btn') && (event.key === 'Enter' || event.code === 'Space')) {
+        speakCurrentVocab(event);
       }
     }
     function vocabNext() { if(!vocabState.items.length) return; vocabState.index=(vocabState.index+1)%vocabState.items.length; vocabState.revealed=false; renderVocab(); }
@@ -46,7 +101,7 @@ const $ = id => document.getElementById(id);
     function vocabShuffle() { if(vocabState.items.length<2) return; let idx=Math.floor(Math.random()*vocabState.items.length); if(idx===vocabState.index) idx=(idx+1)%vocabState.items.length; vocabState.index=idx; vocabState.revealed=false; renderVocab(); }
     populateVocabSections();
     $('vocabSection').addEventListener('input', filterVocab); $('vocabSearch').addEventListener('input', filterVocab);
-    $('flashCard').addEventListener('click', vocabToggle); $('vocabFlip').addEventListener('click', vocabToggle); $('vocabNext').addEventListener('click', vocabNext); $('vocabPrev').addEventListener('click', vocabPrev); $('vocabShuffle').addEventListener('click', vocabShuffle);
+    $('flashCard').addEventListener('click', handleFlashCardClick); $('flashCard').addEventListener('keydown', handleFlashCardKeydown); $('vocabFlip').addEventListener('click', vocabToggle); $('vocabNext').addEventListener('click', vocabNext); $('vocabPrev').addEventListener('click', vocabPrev); $('vocabShuffle').addEventListener('click', vocabShuffle);
 
     const practiceState = { index:0, items:[...PRACTICE_DATA], revealed:false, selected:null, shuffled:false };
     function populatePracticeSets() {
@@ -100,6 +155,6 @@ const $ = id => document.getElementById(id);
       const active = document.querySelector('.view.active')?.id;
       if(e.key==='ArrowRight') active==='vocab' ? vocabNext() : active==='practice' ? practiceNext() : null;
       if(e.key==='ArrowLeft') active==='vocab' ? vocabPrev() : active==='practice' ? practicePrev() : null;
-      if(e.code==='Space') { e.preventDefault(); active==='vocab' ? vocabToggle() : active==='practice' ? practiceToggle() : null; }
+      if(e.code==='Space') { if(document.activeElement?.classList?.contains('speaker-btn')) return; e.preventDefault(); active==='vocab' ? vocabToggle() : active==='practice' ? practiceToggle() : null; }
     });
     renderVocab(); renderPractice();
