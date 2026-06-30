@@ -1,11 +1,11 @@
-# Simple English Learning Preview
+# Simple English Learning Code Files
 
-This package is the split code version of the updated HTML preview.
+This package was rebuilt from the uploaded HTML preview file: `simple_english_learning_preview_practice_updated.html`.
 
 ## Structure
 
-```
-simple_english_learning_code_files/
+```text
+simple_english_learning_code_files_UPDATED/
 ├── index.html
 ├── css/
 │   └── styles.css
@@ -16,12 +16,9 @@ simple_english_learning_code_files/
     └── practice-data.js
 ```
 
-## Notes
+## Data counts
 
-- `index.html` keeps the original layout and navigation.
-- `css/styles.css` keeps the original Cùng My style.
-- `data/vocab-data.js` contains the reordered/corrected Flip Cards vocabulary categories.
-- `data/practice-data.js` contains the updated 6,000 Practice Time questions.
-- `js/app.js` contains only the app behavior and rendering logic.
+- Flip Cards: 3000 cards
+- Practice Time: 6000 questions
 
-Open `index.html` in a browser to preview the app.
+Open `index.html` in a browser to preview.
